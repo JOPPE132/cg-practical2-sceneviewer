@@ -32,7 +32,7 @@ class Cone {
 
         // Cone surface indices
         for (let i = 1; i <= nSides; i++) {
-            indices.push(0, i, i + 1);
+            indices.push(0, i, (i % nSides) + 1);
         }
 
         const vertexBuffer = gl.createBuffer();
@@ -40,35 +40,30 @@ class Cone {
         const indexBuffer = gl.createBuffer();
 
         const a_Position = gl.getAttribLocation(gl.program, 'a_Position');
-        if(!a_Position < 0){
+        if (a_Position < 0) {
             console.log("Failed to get the storage location of a_Position");
             return -1;
         }
         const a_Color = gl.getAttribLocation(gl.program, 'a_Color');
-        if(!a_Color < 0){
+        if (a_Color < 0) {
             console.log("Failed to get the storage location of a_Color");
             return -1;
         }
 
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-        // Assign the buffer object to a_Position and enable the assignment
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
         gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Position);
 
-        // Write the vertex colors to the buffer object
         gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
-
-        // Assign the buffer object to a_Color and enable the assignment
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
         gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(a_Color);
 
-        // Write the indices to the buffer object
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint8Array(indices), gl.STATIC_DRAW);
 
         return indices.length;
     }
+
 }
