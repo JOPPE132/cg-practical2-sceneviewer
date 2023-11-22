@@ -23,6 +23,8 @@ addButton.onclick = function() {
         scene.addObject(new Quad(name, scale, translation, rotation));
     } else if (shape.value == "cube") {
         scene.addObject(new Cube(name, scale, translation, rotation));
+    } else if (shape.value == "cone") {
+        scene.addObject(new Cone(name, scale, translation, rotation));
     }
     scene.draw();
 

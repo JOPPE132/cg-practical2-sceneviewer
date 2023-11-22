@@ -10,37 +10,41 @@
         <canvas id="canvas" width="400" height="400">
             Please use a browser that supports "canvas"
         </canvas>
-        <div>
-            <div>
+        <div id="translation-options">
+            <div id="position">
                 <label for="translation-x">Position:</label>
                 <input type="text" id="translation-x" value="0" size="5px">
                 <input type="text" id="translation-y" value="0" size="5px">
                 <input type="text" id="translation-z" value="0" size="5px">
             </div>
-            <div>
+            <div id="scale">
                 <label for="scale-x">Scale:</label>
                 <input type="text" id="scale-x" value="0.1" size="5px">
                 <input type="text" id="scale-y" value="0.1" size="5px">
                 <input type="text" id="scale-z" value="0.1" size="5px">
             </div>
-            <div>
+            <div id="rotation">
                 <label for="rotation-z">Rotation along z-axis (in deg):</label>
                 <input type="text" id="rotation-z" value="0.0" size="5px">
             </div>
-            <div>
+            <div id="shape-selector">
                 <label for="shape">Shape:</label>
                 <select name="shape" id="shape">
                     <option value="quad">Quad</option>
                     <option value="cube">Cube</option>
+                    <option value="cone">Cone</option>
+                    <option value="cylinder">Cylinder</option>
+                    <option value="disk">Disk</option>
+                    <option value="sphere">Sphere</option>
+                    <option value="square-pyramid">Square pyramid</option>
                 </select>
             </div>
         </div>
-        <div>
+        <div id="remove-options">
             <button type="button" id="add-button">ADD</button>
             <button type="button" id="remove-button">REMOVE</button>
         </div>
-        <div>
-            <label for="objects">GameObjects</label>
+        <div id="objects-container">
             <select multiple id="objects" size="20"></select>
         </div>
 
@@ -52,6 +56,7 @@
         <script src="src/shaders/fragment.js"></script>
         <script src="src/objects/quad.js"></script>
         <script src="src/objects/cube.js"></script>
+        <script src="src/objects/cone.js"></script>
         <script src="src/scene.js"></script>
         <script src="src/index.js"></script>
     </body>

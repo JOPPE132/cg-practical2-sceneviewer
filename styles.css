@@ -1,0 +1,41 @@
+body{
+    display: flex;
+    justify-content: center;
+    margin-top: 200px;
+    font-family: Roboto;
+}
+
+#canvas{
+    outline: 1px solid black;
+}
+
+#translation-options{
+    padding: 20px;
+    outline: 1px solid black;
+}
+
+#position{
+    padding: 10px;
+}
+
+#scale{
+    padding: 10px;
+}
+
+#rotation{
+    padding: 10px;
+}
+
+#shape-selector{
+    padding: 10px;
+}
+
+#remove-options{
+    padding: 20px;
+    outline: 1px solid black;
+}
+
+#objects-container{
+    padding: 20px;
+    outline: 1px solid black;
+}
