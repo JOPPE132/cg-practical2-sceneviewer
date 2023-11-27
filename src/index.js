@@ -24,6 +24,8 @@ addButton.onclick = function() {
         scene.addObject(new Quad(name, scale, translation, rotation));
     } else if (shape.value == "cube") {
         scene.addObject(new Cube(name, scale, translation, rotation));
+    } else if (shape.value == "square-pyramid"){
+        scene.addObject(new SquarePyramid(name, scale, translation, rotation));
     } else if (shape.value == "cone") {
         scene.addObject(new Cone(name, scale, translation, rotation));
     } else if (shape.value == "sphere") {
