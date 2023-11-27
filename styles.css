@@ -2,7 +2,7 @@ body{
     display: flex;
     justify-content: center;
     margin-top: 200px;
-    font-family: Roboto;
+    font-family: Roboto, serif;
 }
 
 #canvas{
@@ -31,8 +31,18 @@ body{
 }
 
 #remove-options{
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     outline: 1px solid black;
+}
+
+#remove-options button {
+    margin: 10px;
+}
+
+#reset-div{
+    padding: 10px;
 }
 
 #objects-container{

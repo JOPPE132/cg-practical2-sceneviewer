@@ -1,5 +1,6 @@
 const addButton = document.getElementById("add-button");
 const removeButton = document.getElementById("remove-button");
+const resetButton = document.getElementById("reset-button");
 const shape = document.getElementById("shape");
 const scaleX = document.getElementById("scale-x");
 const scaleY = document.getElementById("scale-y");
@@ -25,6 +26,12 @@ addButton.onclick = function() {
         scene.addObject(new Cube(name, scale, translation, rotation));
     } else if (shape.value == "cone") {
         scene.addObject(new Cone(name, scale, translation, rotation));
+    } else if (shape.value == "sphere") {
+        scene.addObject(new Sphere(name, scale, translation, rotation));
+    } else if (shape.value == "cylinder") {
+        scene.addObject(new Cylinder(name, scale, translation, rotation, 100));
+    } else if(shape.value = "disk"){
+        scene.addObject(new Disk(name, scale, translation, rotation, 100));
     }
     scene.draw();
 
@@ -37,6 +44,13 @@ removeButton.onclick = function() {
 
     updateObjectList();
 };
+
+resetButton.onClick = function(){
+    scene.resetObject(objects.value);
+    scene.draw();
+
+    updateObjectList();
+}
 
 function updateObjectList() {
     objects.innerHTML = "";
