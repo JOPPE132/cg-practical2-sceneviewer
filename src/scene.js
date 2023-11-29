@@ -47,14 +47,6 @@ class Scene {
         }
     }
 
-    resetObject(objectName) {
-        for (let i = 0; i<this.objects.length; i++){
-            if (this.objects[i].name == objectName){
-                this.objects.splice(i,1);
-            }
-        }
-    }
-
     draw() {
         this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 

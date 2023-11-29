@@ -29,7 +29,7 @@ addButton.onclick = function() {
     } else if (shape.value == "cone") {
         scene.addObject(new Cone(name, scale, translation, rotation));
     } else if (shape.value == "sphere") {
-        scene.addObject(new Sphere(name, scale, translation, rotation));
+        scene.addObject(new Sphere(name, 1, translation, rotation)); //TODO FIKS RADIUS input element
     } else if (shape.value == "cylinder") {
         scene.addObject(new Cylinder(name, scale, translation, rotation, 100));
     } else if(shape.value = "disk"){
@@ -47,8 +47,19 @@ removeButton.onclick = function() {
     updateObjectList();
 };
 
-resetButton.onClick = function(){
+resetButton.onclick = function(){
     scene.resetObject(objects.value);
+
+    scaleX.value = 1;
+    scaleY.value = 1;
+    scaleZ.value = 1;
+
+    translationX.value = 1;
+    translationY.value = 1;
+    translationZ.value = 1;
+
+    rotationZ.value = 1;
+
     scene.draw();
 
     updateObjectList();
