@@ -13,64 +13,71 @@ const objects = document.getElementById("objects");
 
 const scene = new Scene();
 
+addButton.onclick = function () {
+  const name = "object_".concat(shape.value).concat(String(Date.now()));
+  const translation = [
+    Number(translationX.value),
+    Number(translationY.value),
+    Number(translationZ.value),
+  ];
+  const scale = [
+    Number(scaleX.value),
+    Number(scaleY.value),
+    Number(scaleZ.value),
+  ];
+  const rotation = Number(rotationZ.value);
 
-addButton.onclick = function() {
-    const name = 'object_'.concat(shape.value).concat(String(Date.now()));
-    const translation = [Number(translationX.value), Number(translationY.value), Number(translationZ.value)];
-    const scale = [Number(scaleX.value), Number(scaleY.value), Number(scaleZ.value)];
-    const rotation = Number(rotationZ.value);
+  if (shape.value == "quad") {
+    scene.addObject(new Quad(name, scale, translation, rotation));
+  } else if (shape.value == "cube") {
+    scene.addObject(new Cube(name, scale, translation, rotation));
+  } else if (shape.value == "square-pyramid") {
+    scene.addObject(new SquarePyramid(name, scale, translation, rotation));
+  } else if (shape.value == "cone") {
+    scene.addObject(new Cone(name, scale, translation, rotation));
+  } else if (shape.value == "sphere") {
+    scene.addObject(new Sphere(name, 1, translation, rotation)); //TODO FIKS RADIUS input element
+  } else if (shape.value == "cylinder") {
+    scene.addObject(new Cylinder(name, scale, translation, rotation, 100));
+  } else if ((shape.value = "disk")) {
+    scene.addObject(new Disk(name, scale, translation, rotation, 100));
+  }
+  scene.draw();
 
-    if (shape.value == "quad") {
-        scene.addObject(new Quad(name, scale, translation, rotation));
-    } else if (shape.value == "cube") {
-        scene.addObject(new Cube(name, scale, translation, rotation));
-    } else if (shape.value == "square-pyramid"){
-        scene.addObject(new SquarePyramid(name, scale, translation, rotation));
-    } else if (shape.value == "cone") {
-        scene.addObject(new Cone(name, scale, translation, rotation));
-    } else if (shape.value == "sphere") {
-        scene.addObject(new Sphere(name, 1, translation, rotation)); //TODO FIKS RADIUS input element
-    } else if (shape.value == "cylinder") {
-        scene.addObject(new Cylinder(name, scale, translation, rotation, 100));
-    } else if(shape.value = "disk"){
-        scene.addObject(new Disk(name, scale, translation, rotation, 100));
-    }
-    scene.draw();
-
-    updateObjectList();
+  updateObjectList();
 };
 
-removeButton.onclick = function() {
-    scene.removeObject(objects.value);
-    scene.draw();
+removeButton.onclick = function () {
+  scene.removeObject(objects.value);
+  scene.draw();
 
-    updateObjectList();
+  updateObjectList();
 };
 
-resetButton.onclick = function(){
-    scene.resetObject(objects.value);
+resetButton.onclick = function () {
+  scene.resetObject(objects.value);
 
-    scaleX.value = 1;
-    scaleY.value = 1;
-    scaleZ.value = 1;
+  scaleX.value = 1;
+  scaleY.value = 1;
+  scaleZ.value = 1;
 
-    translationX.value = 1;
-    translationY.value = 1;
-    translationZ.value = 1;
+  translationX.value = 1;
+  translationY.value = 1;
+  translationZ.value = 1;
 
-    rotationZ.value = 1;
+  rotationZ.value = 1;
 
-    scene.draw();
+  scene.draw();
 
-    updateObjectList();
-}
+  updateObjectList();
+};
 
 function updateObjectList() {
-    objects.innerHTML = "";
+  objects.innerHTML = "";
 
-    for (let object of scene.objects) {
-        const option = document.createElement("option");
-        option.innerHTML = object.name;
-        objects.appendChild(option);
-    }
+  for (let object of scene.objects) {
+    const option = document.createElement("option");
+    option.innerHTML = object.name;
+    objects.appendChild(option);
+  }
 }

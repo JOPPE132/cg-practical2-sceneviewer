@@ -30,6 +30,10 @@ body{
     padding: 10px;
 }
 
+#color-selector{
+    padding: 10px;
+}
+
 #remove-options{
     display: flex;
     flex-direction: column;
