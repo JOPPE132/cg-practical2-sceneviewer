@@ -26,6 +26,10 @@ body{
     padding: 10px;
 }
 
+#radius-container{
+    padding: 10px;
+}
+
 #shape-selector{
     padding: 10px;
 }

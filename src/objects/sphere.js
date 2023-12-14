@@ -2,7 +2,7 @@ class Sphere {
   constructor(name, radius, translation, rotation) {
     this.name = name;
     this.shape = shape;
-    // this.scale = scale;
+    this.scale = [0, 0, 0];
     this.radius = radius;
     this.translation = translation;
     this.rotation = rotation;
@@ -24,7 +24,6 @@ class Sphere {
     const colors = [];
     const indices = [];
 
-    //Generate vertices along latitude
     for (let lat = 0; lat <= stacks; lat++) {
       const phi = Math.PI / 2 - Math.PI * (lat / stacks);
       const sinPhi = Math.sin(phi);
@@ -87,16 +86,12 @@ class Sphere {
     // Write vertex coordinates to the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-    // Assign the buffer object to a_Position and enable the assignment
     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Position);
 
     // Write vertex colors to the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
-    // Assign the buffer object to a_Color and enable the assignment
     gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Color);
 
@@ -109,5 +104,41 @@ class Sphere {
     );
 
     return indices.length;
+  }
+  resetTransform() {
+    this.scale = [0.1, 0.1, 0.1];
+    this.translation = [0, 0, 0];
+    this.rotation = 0;
+    this.radius = 1;
+    this.updateModelMatrix();
+  }
+
+  translate(translate) {
+    this.translation[0] += translate[0];
+    this.translation[1] += translate[1];
+    this.translation[2] += translate[2];
+    this.updateModelMatrix();
+  }
+
+  scaleObject(scale) {
+    this.scale[0] += scale;
+    this.scale[1] += scale;
+    this.scale[2] += scale;
+    this.updateModelMatrix();
+  }
+
+  rotateObject(rotation) {
+    this.rotation += rotation;
+    this.updateModelMatrix();
+  }
+
+  updateModelMatrix() {
+    this.modelMatrix.setTranslate(
+      this.translation[0],
+      this.translation[1],
+      this.translation[2]
+    );
+    this.modelMatrix.scale(this.scale[0], this.scale[1], this.scale[2]);
+    this.modelMatrix.rotate(this.rotation, 0, 0, 1);
   }
 }

@@ -1,10 +1,11 @@
 class Disk {
-  constructor(name, scale, translation, rotation, segments) {
+  constructor(name, radius, translation, rotation) {
     this.name = name;
-    this.scale = scale;
+    this.shape = shape;
+    this.scale = [0.1, 0.1, 0.1];
+    this.radius = radius;
     this.translation = translation;
     this.rotation = rotation;
-    this.segments = segments; // Number of segments to make the disk smooth
 
     this.modelMatrix = new Matrix4();
     this.modelMatrix.setTranslate(
@@ -12,38 +13,28 @@ class Disk {
       this.translation[1],
       this.translation[2]
     );
-    this.modelMatrix.scale(this.scale[0], this.scale[1], this.scale[2]);
     this.modelMatrix.rotate(this.rotation, 0, 0, 1);
   }
 
-  initVertexBuffers(gl) {
-    const vertices = [];
-    const colors = [];
-    const indices = [];
+  initVertexBuffers(gl, slices = 30) {
+    const vertices = [0.0, 0.0, 0.0]; // Center of the disk
 
-    // Center of the disk
-    vertices.push(0.0, 0.0);
-    colors.push(1.0, 1.0, 1.0); // Color for the center
-
-    // Generate points around the disk
-    for (let i = 0; i <= this.segments; i++) {
-      const angle = (i * 2 * Math.PI) / this.segments;
-      const x = Math.cos(angle);
-      const y = Math.sin(angle);
-
-      vertices.push(x, y);
-      colors.push(1.0, 0.5, 1.0);
+    // Generate vertex coordinates
+    for (let i = 0; i <= slices; i++) {
+      const angle = (i / slices) * 2 * Math.PI;
+      const x = this.radius * Math.cos(angle);
+      const y = this.radius * Math.sin(angle);
+      vertices.push(x, y, 0.0);
     }
 
-    // Generate indices for triangle fan
-    for (let i = 1; i <= this.segments; i++) {
+    // Colors (set a single color for the entire disk)
+    const colors = new Float32Array(vertices.length).fill(0.9);
+
+    // Indices
+    const indices = [];
+    for (let i = 1; i <= slices; i++) {
       indices.push(0, i, i + 1);
     }
-    indices.push(0, this.segments, 1); // Close the disk
-
-    const verticesFloat32Array = new Float32Array(vertices);
-    const colorsFloat32Array = new Float32Array(colors);
-    const indicesUint8Array = new Uint8Array(indices);
 
     // Create buffers
     const vertexBuffer = gl.createBuffer();
@@ -54,7 +45,7 @@ class Disk {
       return -1;
     }
 
-    // Get a_Position and a_Color attribute variables
+    // Get attribute variables
     const a_Position = gl.getAttribLocation(gl.program, "a_Position");
     if (a_Position < 0) {
       console.log("Failed to get the storage location of a_Position");
@@ -66,26 +57,62 @@ class Disk {
       return -1;
     }
 
-    // Write the vertex coordinates to the buffer object
+    // Write vertex coordinates to the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, verticesFloat32Array, gl.STATIC_DRAW);
-
-    // Assign the buffer object to a_Position and enable the assignment
-    gl.vertexAttribPointer(a_Position, 2, gl.FLOAT, false, 0, 0);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Position);
 
-    // Write the vertex colors to the buffer object
+    // Write vertex colors to the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, colorsFloat32Array, gl.STATIC_DRAW);
-
-    // Assign the buffer object to a_Color and enable the assignment
+    gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
     gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Color);
 
-    // Write the indices to the buffer object
+    // Write indices to the buffer object
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indicesUint8Array, gl.STATIC_DRAW);
+    gl.bufferData(
+      gl.ELEMENT_ARRAY_BUFFER,
+      new Uint8Array(indices),
+      gl.STATIC_DRAW
+    );
 
     return indices.length;
+  }
+  resetTransform() {
+    this.scale = [0.1, 0.1, 0.1];
+    this.translation = [0, 0, 0];
+    this.rotation = 0;
+    this.radius = 1;
+    this.updateModelMatrix();
+  }
+
+  translate(translate) {
+    this.translation[0] += translate[0];
+    this.translation[1] += translate[1];
+    this.translation[2] += translate[2];
+    this.updateModelMatrix();
+  }
+
+  scaleObject(scale) {
+    this.scale[0] += scale;
+    this.scale[1] += scale;
+    this.scale[2] += scale;
+    this.updateModelMatrix();
+  }
+
+  rotateObject(rotation) {
+    this.rotation += rotation;
+    this.updateModelMatrix();
+  }
+
+  updateModelMatrix() {
+    this.modelMatrix.setTranslate(
+      this.translation[0],
+      this.translation[1],
+      this.translation[2]
+    );
+    this.modelMatrix.scale(this.scale[0], this.scale[1], this.scale[2]);
+    this.modelMatrix.rotate(this.rotation, 0, 0, 1);
   }
 }

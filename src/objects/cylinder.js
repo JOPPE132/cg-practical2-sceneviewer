@@ -109,4 +109,39 @@ class Cylinder {
 
     return indices.length;
   }
+
+  resetTransform() {
+    this.scale = [0.1, 0.1, 0.1];
+    this.translation = [0, 0, 0];
+    this.rotation = 0;
+    this.updateModelMatrix();
+  }
+
+  translate(translate) {
+    this.translation[0] += translate[0];
+    this.translation[1] += translate[1];
+    this.translation[2] += translate[2];
+    this.updateModelMatrix();
+  }
+
+  scaleObject(scale) {
+    this.scale[0] += scale;
+    this.scale[1] += scale;
+    this.scale[2] += scale;
+    this.updateModelMatrix();
+  }
+  rotateObject(rotation) {
+    this.rotation += rotation;
+    this.updateModelMatrix();
+  }
+
+  updateModelMatrix() {
+    this.modelMatrix.setTranslate(
+      this.translation[0],
+      this.translation[1],
+      this.translation[2]
+    );
+    this.modelMatrix.scale(this.scale[0], this.scale[1], this.scale[2]);
+    this.modelMatrix.rotate(this.rotation, 0, 0, 1);
+  }
 }

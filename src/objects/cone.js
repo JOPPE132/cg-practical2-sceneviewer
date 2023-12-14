@@ -1,6 +1,7 @@
 class Cone {
   constructor(name, scale, translation, rotation) {
     this.name = name;
+    this.shape = shape;
     this.scale = scale;
     this.translation = translation;
     this.rotation = rotation;
@@ -16,25 +17,24 @@ class Cone {
   }
 
   initVertexBuffers(gl) {
-    const nSides = 20; // Fixed number of sides for the cone's base
-    let vertices = [];
-    let colors = [];
-    let indices = [];
+    const vertices = []; // Apex of the cone
+    const nSides = 30;
+    const colors = [];
+    const indices = [];
 
-    // Cone apex point
-    vertices.push(0.0, 1.0, 0.0); // Cone's tip (centered above base)
-    colors.push(1.0, 0.0, 0.0); // Cone tip color (red for example)
+    vertices.push(0.0, 1.0, 0.0);
+    colors.push(0.0, 1.0, 0.0);
 
-    // Cone base vertices and colors
+    // Generate vertex coordinates for the base
     for (let i = 0; i <= nSides; i++) {
-      let angle = (2 * Math.PI * i) / nSides;
-      let x = Math.cos(angle);
-      let z = Math.sin(angle);
-      vertices.push(x, -1.0, z); // Base circle points
-      colors.push(0.0, 1.0, 0.0); // Base color (green for example)
+      const angle = (i / nSides) * 2 * Math.PI;
+      const x = Math.cos(angle);
+      const z = Math.sin(angle);
+      vertices.push(x, -1.0, z);
+      colors.push(0.0, 0.0, 1.0);
     }
 
-    // Cone surface indices
+    // Indices for the surface
     for (let i = 1; i <= nSides; i++) {
       indices.push(0, i, (i % nSides) + 1);
     }
@@ -43,8 +43,12 @@ class Cone {
     const vertexBuffer = gl.createBuffer();
     const colorBuffer = gl.createBuffer();
     const indexBuffer = gl.createBuffer();
+    if (!vertexBuffer || !colorBuffer || !indexBuffer) {
+      console.log("Failed to create the buffer object");
+      return -1;
+    }
 
-    // Get a_Position and a_Color attribute variables
+    // Get attribute variables
     const a_Position = gl.getAttribLocation(gl.program, "a_Position");
     if (a_Position < 0) {
       console.log("Failed to get the storage location of a_Position");
@@ -56,23 +60,19 @@ class Cone {
       return -1;
     }
 
-    // Write the vertex coordinates to the buffer object
+    // Write vertex coordinates to the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
-
-    // Assign the buffer object to a_Position and enable the assignment
     gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Position);
 
-    // Write the vertex colors to the buffer object
+    // Write vertex colors to the buffer object
     gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
-    // Assign the buffer object to a_Color and enable the assignment
     gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(a_Color);
 
-    // Write the indices to the buffer object
+    // Write indices for the base to the buffer object
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(
       gl.ELEMENT_ARRAY_BUFFER,
@@ -81,5 +81,39 @@ class Cone {
     );
 
     return indices.length;
+  }
+  resetTransform() {
+    this.scale = [0.1, 0.1, 0.1];
+    this.translation = [0, 0, 0];
+    this.rotation = 0;
+    this.updateModelMatrix();
+  }
+
+  translate(translate) {
+    this.translation[0] += translate[0];
+    this.translation[1] += translate[1];
+    this.translation[2] += translate[2];
+    this.updateModelMatrix();
+  }
+
+  scaleObject(scale) {
+    this.scale[0] += scale;
+    this.scale[1] += scale;
+    this.scale[2] += scale;
+    this.updateModelMatrix();
+  }
+  rotateObject(rotation) {
+    this.rotation += rotation;
+    this.updateModelMatrix();
+  }
+
+  updateModelMatrix() {
+    this.modelMatrix.setTranslate(
+      this.translation[0],
+      this.translation[1],
+      this.translation[2]
+    );
+    this.modelMatrix.scale(this.scale[0], this.scale[1], this.scale[2]);
+    this.modelMatrix.rotate(this.rotation, 0, 0, 1);
   }
 }
