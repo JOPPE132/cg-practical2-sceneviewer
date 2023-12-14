@@ -82,6 +82,7 @@ class Cone {
 
     return indices.length;
   }
+  
   resetTransform() {
     this.scale = [0.1, 0.1, 0.1];
     this.translation = [0, 0, 0];
